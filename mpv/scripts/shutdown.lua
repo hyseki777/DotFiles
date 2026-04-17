@@ -20,21 +20,19 @@ local function disable()
 end
 
 local function enable()
-
     if shutdown then
-        mp.osd_message("PC will shutdown after playback")
+        mp.osd_message("Shutdown after file activated")
     elseif sleep then
-        mp.osd_message("PC will sleep after playback")
+        mp.osd_message("Sleep after file activated")
     end
     handler = function(event)
-        mp.osd_message(event.reason)
-        if event.reason == "eof" or event.reason == "stop" then
+        if event.reason == "eof" then
             if shutdown then
                 os.execute("shutdown -h now")
-            end
             elseif sleep then
                 os.execute("systemctl suspend")
             end
+        end
     end
     mp.register_event("end-file", handler)
 end
